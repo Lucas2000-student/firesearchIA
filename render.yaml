@@ -3,6 +3,5 @@ services:
     name: firesearchia
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn inference:app --bind 0.0.0.0:$PORT
+    startCommand: python -m gunicorn inference:app --bind 0.0.0.0:$PORT
     plan: free
-  
