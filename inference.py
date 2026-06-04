@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
-import numpy as np
+import os
 
 app = Flask(__name__)
 
@@ -96,4 +96,5 @@ def health():
     return jsonify({'status': 'ok', 'model': 'Algerian Forest Fires RF'})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8001)
+    port = int(os.environ.get('PORT', 8001))
+    app.run(host='0.0.0.0', port=port)

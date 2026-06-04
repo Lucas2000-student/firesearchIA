@@ -1,60 +1,97 @@
 # firesearchIA
 
-API de inferência de risco de incêndio florestal baseada em Machine Learning, desenvolvida para o projeto **Global Solution 2026/1 — FIAP**.
+API de inferência de risco de incêndio florestal para leitura de sensores IoT. Projeto desenvolvido para **FIAP — Análise e Desenvolvimento de Sistemas — 2026/1**.
 
-## Equipe
+**Resumo:** modelo Random Forest treinado com o dataset "Algerian Forest Fires" (UCI). A API recebe observações de sensores (temperatura, umidade, vento, chuva, CO2, fumaça) e retorna uma predição (`fire` / `not fire`), um `score` de risco (0–100) e um `nivel` categórico (BAIXO, MEDIO, ALTO).
 
-| RM | Nome | Matéria
-|---|---|---|
-| RM553043 | Daniel Kendi | Banco de dados e .Net
-| RM560179 | Lucas da Ressurreição | Java e IOT
-| RM560560 | Jonas Kimio | Mobile
-| RM560475 | Marcos Vinicius | DevOps e QA
+**Equipe**
 
-## Sobre
+- **RM553043:** Daniel Kendi — Banco de dados e .Net
+- **RM560179:** Lucas da Ressurreição — Java e IOT
+- **RM560560:** Jonas Kimio — Mobile
+- **RM560475:** Marcos Vinicius — DevOps e QA
 
-Modelo treinado com o **Algerian Forest Fires Dataset** (UCI Machine Learning Repository) utilizando **Random Forest Classifier**, com acurácia de **95.92%**.
+**Conteúdo do repositório**
 
-A API recebe leituras de sensores IoT e retorna o nível de risco de incêndio (ALTO, MEDIO, BAIXO) e um score de 0 a 100.
+- `Algerian_forest_fires_dataset.csv` — dataset original (UCI)
+- `training_iot.ipynb` — notebook de treinamento e experimentos
+- `inference.py` — aplicação Flask para inferência
+- `modelo.pkl`, `features.pkl` — artefatos do modelo (não incluídos no repositório)
+- `requirements.txt` — dependências
 
-## Endpoints
+**Requisitos**
 
-### `POST /predict`
-Recebe dados de sensores e retorna a predição de risco.
+- Python 3.8+ (recomendado 3.10+)
+- pacotes: ver `requirements.txt`
 
-**Body:**
-```json
-{
-  "temperatura": 38,
-  "umidade": 25,
-  "co2": 1200,
-  "fumaca": 70,
-  "vento": 20,
-  "chuva": 0
-}
+Instalação rápida:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-**Resposta:**
+Observação: garanta que os arquivos `modelo.pkl` e `features.pkl` estejam presentes na raiz do projeto antes de iniciar a API.
+
+Como executar a API (desenvolvimento):
+
+```bash
+python inference.py
+```
+
+Por padrão a aplicação ouve em `0.0.0.0:8001` (variável de ambiente `PORT` pode ser usada).
+
+**Endpoints**
+
+- `GET /health`
+  - Retorno: `{"status": "ok", "model": "Algerian Forest Fires RF"}`
+
+- `POST /predict`
+  - Recebe JSON com as leituras de sensores. Campos aceitos (exemplos e valores padrão no mapeamento dentro de `inference.py`):
+    - `temperatura` (float)
+    - `umidade` (float)
+    - `vento` (float)
+    - `chuva` (float)
+    - `co2` (float)
+    - `fumaca` (float)
+
+Exemplo de requisição:
+
+```bash
+curl -X POST http://localhost:8001/predict \
+  -H "Content-Type: application/json" \
+  -d '{"temperatura":38, "umidade":25, "co2":1200, "fumaca":70, "vento":20, "chuva":0}'
+```
+
+Exemplo de resposta (JSON):
+
 ```json
 {
   "prediction": "fire",
-  "nivel": "ALTO",
   "score": 100.0,
+  "nivel": "ALTO",
   "prob_fire": 100.0,
-  "features_usadas": { ... }
+  "features_usadas": {
+    "Temperature": 38.0,
+    "RH": 25.0,
+    "Ws": 20.0,
+    "Rain": 0.0,
+    "FFMC": 86.4,
+    "DMC": 13.0,
+    "DC": 80.0
+  }
 }
 ```
 
-### `GET /health`
-Verifica se a API está no ar.
+**Notas importantes**
 
-## Tecnologias
+- O mapeamento de leituras IoT para as features do dataset (FFMC, DMC, DC) é implementado em `inference.py` — ver as funções `mapear_para_features` e `calcular_score` para entender como o `score` é computado.
+- O arquivo `training_iot.ipynb` contém os passos e experimentos de treinamento do modelo. Use-o para regenerar `modelo.pkl` e `features.pkl` quando necessário.
+- `requirements.txt` lista as dependências principais (`flask`, `scikit-learn`, `pandas`, `numpy`).
 
-- Python 3.12
-- Flask 3.0
-- Scikit-learn 1.3
-- Dataset: Algerian Forest Fires (243 amostras)
+Se quiser, eu atualizo também o `inference.py` para incluir import faltante (`os`) ou um `Procfile`/`render.yaml` para deploy — quer que eu faça isso?
 
 ---
 
-**FIAP — Análise e Desenvolvimento de Sistemas — 2026/1**
+Projeto criado para o desafio acadêmico FIAP 2026/1.

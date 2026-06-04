@@ -1,7 +1,9 @@
 services:
   - type: web
     name: firesearchia
-    env: python
+    runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python -m gunicorn inference:app --bind 0.0.0.0:$PORT
-    plan: free
+    startCommand: python inference.py
+    envVars:
+      - key: PORT
+        value: 8001
