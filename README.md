@@ -4,12 +4,12 @@ API de inferência de risco de incêndio florestal baseada em Machine Learning, 
 
 ## Equipe
 
-| RM | Nome |
+| RM | Nome | Matéria
 |---|---|
-| RM553043 | Daniel Kendi |
-| RM560179 | Lucas da Ressurreição |
-| RM560560 | Jonas Kimio |
-| RM560475 | Marcos Vinicius |
+| RM553043 | Daniel Kendi | Banco de dados e .Net
+| RM560179 | Lucas da Ressurreição | Java e IOT
+| RM560560 | Jonas Kimio | Mobile
+| RM560475 | Marcos Vinicius | DevOps e QA
 
 ## Sobre
 
