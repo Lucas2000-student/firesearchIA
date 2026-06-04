@@ -84,14 +84,4 @@ Exemplo de resposta (JSON):
 }
 ```
 
-**Notas importantes**
-
-- O mapeamento de leituras IoT para as features do dataset (FFMC, DMC, DC) é implementado em `inference.py` — ver as funções `mapear_para_features` e `calcular_score` para entender como o `score` é computado.
-- O arquivo `training_iot.ipynb` contém os passos e experimentos de treinamento do modelo. Use-o para regenerar `modelo.pkl` e `features.pkl` quando necessário.
-- `requirements.txt` lista as dependências principais (`flask`, `scikit-learn`, `pandas`, `numpy`).
-
-Se quiser, eu atualizo também o `inference.py` para incluir import faltante (`os`) ou um `Procfile`/`render.yaml` para deploy — quer que eu faça isso?
-
----
-
 Projeto criado para o desafio acadêmico FIAP 2026/1.
